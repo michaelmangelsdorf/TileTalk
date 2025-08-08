@@ -14,5 +14,3 @@ Tap to see the stored message and comments - one comment per contact.
 All messages are end-to-end encrypted and you can import/export your keypair to migrate to a different device.
 
 ![Pic1](https://github.com/michaelmangelsdorf/TileTalk/blob/main/tiletalk-screeny1.jpg)
-
-![Pic2](https://github.com/michaelmangelsdorf/TileTalk/blob/main/tiletalk-screeny2.jpg)
