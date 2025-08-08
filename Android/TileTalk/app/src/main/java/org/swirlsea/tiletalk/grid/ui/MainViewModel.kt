@@ -237,6 +237,7 @@ class MainViewModel(
                     saveEditedMessage(currentDialog.tileOwnerId, currentDialog.x, currentDialog.y, event.newMessage)
                 }
             }
+            is MainScreenEvent.RefreshGrids -> refreshUserAndContactGrids()
             else -> {}
         }
     }
@@ -300,7 +301,6 @@ class MainViewModel(
                             val messagesResponse = repository.readMessages(userId, x, y)
                             val hasMessages = messagesResponse.success && !messagesResponse.data.isNullOrEmpty()
 
-                            // Updated logic to check the 'seen' flag on messages
                             val hasNew = if (hasMessages) {
                                 messagesResponse.data!!.any { it.seen == false }
                             } else {
@@ -347,6 +347,21 @@ class MainViewModel(
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(snackbarMessage = "An unexpected error occurred while selecting a contact.") }
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+    }
+
+    private fun refreshUserAndContactGrids() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            try {
+                _uiState.value.loggedInUser?.id?.let { fetchUserGrid(it) }
+                _uiState.value.selectedContact?.id?.let { fetchContactGrid(it) }
+                _uiState.update { it.copy(snackbarMessage = "Grids refreshed.") }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(snackbarMessage = "Failed to refresh grids: ${e.message}") }
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

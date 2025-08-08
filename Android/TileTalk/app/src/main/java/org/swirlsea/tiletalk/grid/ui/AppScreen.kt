@@ -1,4 +1,3 @@
-
 package org.swirlsea.tiletalk.grid.ui
 
 import android.annotation.SuppressLint
@@ -10,6 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
@@ -54,7 +57,7 @@ class MainViewModelFactory(private val application: Application) : ViewModelProv
 }
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel = viewModel(
@@ -265,39 +268,56 @@ fun MainScreen(
             val configuration = LocalConfiguration.current
             val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-            BoxWithConstraints(
+            val pullRefreshState = rememberPullRefreshState(
+                refreshing = uiState.isLoading,
+                onRefresh = { mainViewModel.onEvent(MainScreenEvent.RefreshGrids) }
+            )
+
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .verticalScroll(rememberScrollState()),
-                contentAlignment = Alignment.TopCenter
+                    .pullRefresh(pullRefreshState)
             ) {
-                if (isLandscape) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Box(modifier = Modifier.weight(1f)) {
-                            UserGridSection(uiState = uiState, mainViewModel = mainViewModel)
+                BoxWithConstraints(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    if (isLandscape) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Box(modifier = Modifier.weight(1f)) {
+                                UserGridSection(uiState = uiState, mainViewModel = mainViewModel)
+                            }
+                            Box(modifier = Modifier.weight(1f)) {
+                                ContactGridSection(uiState = uiState, mainViewModel = mainViewModel)
+                            }
                         }
-                        Box(modifier = Modifier.weight(1f)) {
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .width(maxWidth * 0.8f), // Constrain width to 80% of the screen
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top
+                        ) {
+                            UserGridSection(uiState = uiState, mainViewModel = mainViewModel)
+                            Spacer(Modifier.height(16.dp))
                             ContactGridSection(uiState = uiState, mainViewModel = mainViewModel)
                         }
                     }
-                } else {
-                    Column(
-                        modifier = Modifier
-                            .width(maxWidth * 0.8f), // Constrain width to 80% of the screen
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top
-                    ) {
-                        UserGridSection(uiState = uiState, mainViewModel = mainViewModel)
-                        Spacer(Modifier.height(16.dp))
-                        ContactGridSection(uiState = uiState, mainViewModel = mainViewModel)
-                    }
                 }
+
+                PullRefreshIndicator(
+                    refreshing = uiState.isLoading,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                )
             }
 
             // Dialogs are now correctly placed within the Scaffold's content lambda

@@ -61,4 +61,5 @@ sealed interface MainScreenEvent {
 
     object ShowAuthDialog : MainScreenEvent
     object ShowContactsDialog : MainScreenEvent
+    object RefreshGrids : MainScreenEvent
 }
