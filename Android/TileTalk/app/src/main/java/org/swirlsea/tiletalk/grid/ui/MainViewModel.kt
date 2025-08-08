@@ -528,6 +528,8 @@ class MainViewModel(
         }
     }
 
+// tiletalk/grid/ui/MainViewModel.kt
+
     private fun saveTile(event: MainScreenEvent.SaveTileChanges) {
         viewModelScope.launch {
             val loggedInUser = _uiState.value.loggedInUser ?: return@launch
@@ -538,8 +540,8 @@ class MainViewModel(
                         "symbol" to event.symbol,
                         "animation_type" to event.animationType,
                         "flip" to event.flip,
-                        "callout" to event.callout.ifBlank { null },
-                        "title" to event.title.ifBlank { null }
+                        "callout" to event.callout, // Changed line
+                        "title" to event.title   // Changed line
                     )
                     repository.updateTile(updates)
                 } else {
@@ -553,8 +555,8 @@ class MainViewModel(
                         animation_type = event.animationType,
                         flip = event.flip,
                         tile_bg = 0,
-                        callout = event.callout.ifBlank { null },
-                        title = event.title.ifBlank { null }
+                        callout = event.callout, // Changed line
+                        title = event.title   // Changed line
                     )
                     repository.createTile(newTile)
                 }

@@ -1,4 +1,4 @@
-
+// tiletalk/grid/ui/EditTileDialog.kt
 package org.swirlsea.tiletalk.grid.ui
 
 import androidx.compose.foundation.layout.*
@@ -101,6 +101,14 @@ fun EditTileDialog(
                         onValueChange = { callout = it },
                         label = { Text("Type a call-out text") },
                         modifier = Modifier.fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { Text("Type a title") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
