@@ -1,0 +1,29 @@
+{
+  "name": "tiletalk",
+  "version": "1.0.0",
+  "description": "A tile-based messenger",
+  "license": "UNLICENSED",
+  "author": "Michael Mangelsdorf",
+  "type": "module",
+  "main": "tiletalk_api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-pg-simple": "^10.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.16.3",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}
