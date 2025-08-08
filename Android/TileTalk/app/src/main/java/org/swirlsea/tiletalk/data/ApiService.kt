@@ -24,6 +24,15 @@ object ApiService {
         override fun loadForRequest(url: HttpUrl): List<Cookie> {
             return cookieStore[url.host] ?: emptyList()
         }
+
+        fun clear() {
+            cookieStore.clear()
+        }
+    }
+
+    // Function to clear the cookies
+    fun clearCookies() {
+        (cookieJar as? CookieJarImpl)?.clear()
     }
 
     private val okHttpClient = OkHttpClient.Builder()
@@ -45,5 +54,22 @@ object ApiService {
 
     fun getOkHttpClient(): OkHttpClient {
         return okHttpClient
+    }
+
+    // A simple inner class to expose the clear method
+    private class CookieJarImpl : CookieJar {
+        private val cookieStore = ConcurrentHashMap<String, List<Cookie>>()
+
+        override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+            cookieStore[url.host] = cookies
+        }
+
+        override fun loadForRequest(url: HttpUrl): List<Cookie> {
+            return cookieStore[url.host] ?: emptyList()
+        }
+
+        fun clear() {
+            cookieStore.clear()
+        }
     }
 }

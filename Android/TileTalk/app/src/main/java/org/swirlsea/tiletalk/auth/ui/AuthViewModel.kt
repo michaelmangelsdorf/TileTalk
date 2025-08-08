@@ -1,5 +1,6 @@
 package org.swirlsea.tiletalk
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ sealed interface AuthUiState {
 }
 
 class AuthViewModel(
+    private val application: Application,
     private val loginRegisterUseCase: LoginRegisterUseCase,
     private val repository: TileTalkRepository,
     private val sessionManager: SessionManager
@@ -88,11 +90,12 @@ class AuthViewModel(
         }
     }
 
+
     fun register(userName: String, password: String, onComplete: ((isSuccess: Boolean) -> Unit)? = null) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
             try {
-                val keyPair = CryptoUtils.generateRsaKeyPair()
+                val keyPair = CryptoUtils.generateAndSaveRsaKeyPair(application, userName)
                 val publicKeyString = CryptoUtils.publicKeyToString(keyPair.public)
 
                 val registerResponse = loginRegisterUseCase.registerUser(userName, password, publicKeyString)

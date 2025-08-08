@@ -43,7 +43,7 @@ class MainViewModelFactory(private val application: Application) : ViewModelProv
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             val app = application as TileTalkApp
             val container = app.container
-            val authViewModel = AuthViewModel(container.loginRegisterUseCase, container.repository, container.sessionManager)
+            val authViewModel = AuthViewModel(application, container.loginRegisterUseCase, container.repository, container.sessionManager)
             val contactsViewModel = ContactsViewModel(container.contactsUseCase)
 
             @Suppress("UNCHECKED_CAST")

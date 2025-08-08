@@ -5,6 +5,7 @@ import org.swirlsea.tiletalk.data.ApiResponse
 import org.swirlsea.tiletalk.data.LoginResponse
 import org.swirlsea.tiletalk.SessionManager
 import org.swirlsea.tiletalk.TileTalkRepository
+import org.swirlsea.tiletalk.data.ApiService
 import org.swirlsea.tiletalk.data.User
 
 class LoginRegisterUseCase(
@@ -34,6 +35,8 @@ class LoginRegisterUseCase(
             Log.e("LoginRegisterUseCase", "API logout call failed, but clearing local session anyway.", e)
         } finally {
             sessionManager.clear()
+            // Clear the cookies
+            ApiService.clearCookies()
         }
     }
 }
