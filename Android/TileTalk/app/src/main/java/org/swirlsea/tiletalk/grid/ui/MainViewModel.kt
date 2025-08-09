@@ -15,6 +15,7 @@ import org.swirlsea.tiletalk.contacts.ui.ContactsUiState
 import org.swirlsea.tiletalk.contacts.ui.ContactsViewModel
 import org.swirlsea.tiletalk.data.MessageSet
 import org.swirlsea.tiletalk.data.Tile
+import org.swirlsea.tiletalk.data.TileTalkRepository
 import org.swirlsea.tiletalk.data.User
 import org.swirlsea.tiletalk.ui.DecryptedMessage
 import org.swirlsea.tiletalk.ui.DialogState
@@ -23,7 +24,6 @@ import org.swirlsea.tiletalk.ui.MainScreenEvent
 import org.swirlsea.tiletalk.ui.MainUiState
 import org.swirlsea.tiletalk.ui.TileUiState
 import retrofit2.HttpException
-
 
 class MainViewModel(
     private val application: Application,

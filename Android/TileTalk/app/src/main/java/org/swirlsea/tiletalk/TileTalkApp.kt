@@ -2,7 +2,9 @@ package org.swirlsea.tiletalk
 
 import android.app.Application
 import org.swirlsea.tiletalk.auth.LoginRegisterUseCase
+import org.swirlsea.tiletalk.auth.SessionManager
 import org.swirlsea.tiletalk.contacts.ContactsUseCase
+import org.swirlsea.tiletalk.data.TileTalkRepository
 
 
 class TileTalkApp : Application() {

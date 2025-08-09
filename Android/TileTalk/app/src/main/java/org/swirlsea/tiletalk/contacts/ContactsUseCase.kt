@@ -3,7 +3,7 @@ package org.swirlsea.tiletalk.contacts
 import android.util.Log
 import org.swirlsea.tiletalk.data.ApiResponse
 import org.swirlsea.tiletalk.data.ContactList
-import org.swirlsea.tiletalk.TileTalkRepository
+import org.swirlsea.tiletalk.data.TileTalkRepository
 import org.swirlsea.tiletalk.data.User
 
 class ContactsUseCase(private val repository: TileTalkRepository) {

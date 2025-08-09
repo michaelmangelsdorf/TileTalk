@@ -1,14 +1,6 @@
-package org.swirlsea.tiletalk
+package org.swirlsea.tiletalk.data
 
 import kotlinx.coroutines.delay
-import org.swirlsea.tiletalk.data.ApiResponse
-import org.swirlsea.tiletalk.data.ApiService
-import org.swirlsea.tiletalk.data.CreateMessageRequest
-import org.swirlsea.tiletalk.data.MessageSet
-import org.swirlsea.tiletalk.data.Tile
-import org.swirlsea.tiletalk.data.TileTalkApi
-import org.swirlsea.tiletalk.data.User
-import org.swirlsea.tiletalk.data.WebSocketClient
 
 /**
  * Repository to handle all data operations for the TileTalk app.

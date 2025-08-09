@@ -3,8 +3,7 @@ package org.swirlsea.tiletalk.auth
 import android.util.Log
 import org.swirlsea.tiletalk.data.ApiResponse
 import org.swirlsea.tiletalk.data.LoginResponse
-import org.swirlsea.tiletalk.SessionManager
-import org.swirlsea.tiletalk.TileTalkRepository
+import org.swirlsea.tiletalk.data.TileTalkRepository
 import org.swirlsea.tiletalk.data.ApiService
 import org.swirlsea.tiletalk.data.User
 

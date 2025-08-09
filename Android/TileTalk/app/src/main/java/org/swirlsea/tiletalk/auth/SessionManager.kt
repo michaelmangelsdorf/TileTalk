@@ -1,9 +1,10 @@
-package org.swirlsea.tiletalk
+package org.swirlsea.tiletalk.auth
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import org.swirlsea.tiletalk.data.UserCredentials
 
 /**
  * Manages user credentials securely using EncryptedSharedPreferences.
