@@ -1,24 +1,19 @@
 package org.swirlsea.tiletalk.data
 
+import android.content.Context
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import org.swirlsea.tiletalk.CryptoUtils
+import org.swirlsea.tiletalk.grid.DecryptedMessage
 
-/**
- * Repository to handle all data operations for the TileTalk app.
- * It abstracts the remote data source (REST API and WebSockets) from the ViewModels.
- */
 class TileTalkRepository {
 
-    // Initialize the Retrofit API service and the WebSocket client
     private val api = ApiService.retrofit.create(TileTalkApi::class.java)
     private val webSocketClient = WebSocketClient(ApiService.getOkHttpClient())
 
-    /**
-     * Lightweight call to check if the current session cookie is valid.
-     * It attempts to fetch the profile of the currently logged-in user.
-     * NOTE: A user ID of 0 is a placeholder since the backend determines the user from the session cookie.
-     */
     suspend fun validateCurrentSession(): ApiResponse<User> {
-        return api.getProfile(0) // The backend will use the session cookie, not this ID.
+        return api.getProfile(0)
     }
 
     suspend fun register(userName: String, password: String, publicKey: String?): ApiResponse<User> {
@@ -42,8 +37,6 @@ class TileTalkRepository {
     suspend fun updateProfile(userId: Int, publicKey: String) =
         api.updateProfile(userId, mapOf("publicKey" to publicKey))
 
-    // Contacts
-
     suspend fun getContacts() = api.getContacts()
 
     suspend fun requestContact(targetUserId: Int) =
@@ -54,8 +47,6 @@ class TileTalkRepository {
 
     suspend fun removeContact(removableUserId: Int) = api.removeContact(removableUserId)
 
-    // Tiles
-
     suspend fun createTile(tile: Tile) = api.createTile(tile)
 
     suspend fun readTile(ownerId: Int, x: Int, y: Int) = api.readTile(ownerId, x, y)
@@ -64,14 +55,12 @@ class TileTalkRepository {
 
     suspend fun deleteTile(tileId: Int) = api.deleteTile(tileId)
 
-    // Messages
-
     suspend fun createMessage(
         ownerId: Int,
         x: Int,
         y: Int,
         messageSet: List<MessageSet>
-    ): ApiResponse<Unit> {
+    ): ApiResponse<Int> {
         val request = CreateMessageRequest(
             ownerId = ownerId,
             xCoord = x,
@@ -85,26 +74,76 @@ class TileTalkRepository {
 
     suspend fun deleteMessage(ownerId: Int, x: Int, y: Int) = api.deleteMessage(ownerId, x, y)
 
+    suspend fun getAllThreads(currentUser: User, context: Context): List<Thread> = coroutineScope {
+        val contactsResponse = getContacts()
+        if (!contactsResponse.success || contactsResponse.data == null) {
+            return@coroutineScope emptyList()
+        }
 
-    // Websockets
+        val contactList = contactsResponse.data
+        // The definitive fix is here: Use the passed-in 'currentUser.id'
+        // to guarantee the user's own grid is included in the list.
+        val allUserIds = (contactList.contacts + currentUser.id).distinct()
 
-    /**
-     * A Flow that emits incoming messages from the WebSocket.
-     * ViewModel can collect this flow to receive real-time updates.
-     */
+        val threadsDeferred = allUserIds.map { userId ->
+            async {
+                (0..3).flatMap { y ->
+                    (0..3).mapNotNull { x ->
+                        val tileResponse = readTile(userId, x, y)
+                        if (tileResponse.success && tileResponse.data != null) {
+                            val tile = tileResponse.data
+                            val messagesResponse = readMessages(userId, x, y)
+                            if (messagesResponse.success && messagesResponse.data?.isNotEmpty() == true) {
+                                val ownerResponse = getProfile(tile.owner_id)
+                                val starterResponse = getProfile(tile.starter_id)
+
+                                if (ownerResponse.success && ownerResponse.data != null && starterResponse.success && starterResponse.data != null) {
+                                    val authorIds = messagesResponse.data.map { it.responder_id }.distinct()
+                                    val authorProfiles = authorIds.associateWith { id -> getProfile(id).data }
+
+                                    val decryptedMessages = messagesResponse.data.mapNotNull { msg ->
+                                        val decryptedContent = CryptoUtils.decryptPayload(msg.payload, context, currentUser.username)
+                                        if (decryptedContent != null) {
+                                            DecryptedMessage(
+                                                authorId = msg.responder_id,
+                                                authorUsername = authorProfiles[msg.responder_id]?.username ?: "Unknown",
+                                                content = decryptedContent,
+                                                createdAt = msg.createdAt,
+                                                canDelete = msg.responder_id == currentUser.id
+                                            )
+                                        } else null
+                                    }
+
+                                    if (decryptedMessages.isNotEmpty()) {
+                                        val sortedMessages = decryptedMessages.sortedBy { it.createdAt }
+                                        val lastMessage = sortedMessages.last()
+                                        Thread(
+                                            tile = tile,
+                                            owner = ownerResponse.data,
+                                            starter = starterResponse.data,
+                                            messages = sortedMessages,
+                                            lastActivity = lastMessage.createdAt,
+                                            lastMessageSnippet = lastMessage.content
+                                        )
+                                    } else null
+                                } else null
+                            } else null
+                        } else null
+                    }
+                }
+            }
+        }
+
+        val allThreads = threadsDeferred.map { it.await() }.flatten()
+        return@coroutineScope allThreads.sortedByDescending { it.lastActivity }
+    }
+
     val updates = webSocketClient.messages
 
-    /**
-     * Connects the WebSocket client to the server.
-     * @param url The WebSocket URL
-     */
     fun startListeningForUpdates(url: String) {
         webSocketClient.connect(url)
     }
 
-    /**
-     * Disconnects the WebSocket client.
-     */
     fun stopListeningForUpdates() {
         webSocketClient.disconnect()
     }

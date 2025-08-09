@@ -2,6 +2,7 @@
 package org.swirlsea.tiletalk.data
 
 import com.google.gson.annotations.SerializedName
+import org.swirlsea.tiletalk.grid.DecryptedMessage
 import java.util.Date
 
 data class User(
@@ -67,4 +68,13 @@ data class ApiResponse<T>(
     val success: Boolean,
     val message: String,
     val data: T? = null
+)
+
+data class Thread(
+    val tile: Tile,
+    val owner: User,
+    val starter: User,
+    val messages: List<DecryptedMessage>,
+    val lastActivity: String,
+    val lastMessageSnippet: String
 )

@@ -1,4 +1,3 @@
-
 package org.swirlsea.tiletalk.data
 
 import retrofit2.http.*
@@ -54,7 +53,8 @@ interface TileTalkApi {
 
 
     @POST("message/create")
-    suspend fun createMessage(@Body body: CreateMessageRequest): ApiResponse<Unit>
+    // The fix is here: Changed ApiResponse<Unit> to ApiResponse<Int>
+    suspend fun createMessage(@Body body: CreateMessageRequest): ApiResponse<Int>
 
     @GET("messages/read")
     suspend fun readMessages(@Query("owner_id") ownerId: Int, @Query("x_coord") x: Int, @Query("y_coord") y: Int): ApiResponse<List<Message>>

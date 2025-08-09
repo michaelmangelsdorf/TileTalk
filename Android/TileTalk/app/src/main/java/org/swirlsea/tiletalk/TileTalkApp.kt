@@ -18,9 +18,9 @@ class TileTalkApp : Application() {
 
 class AppContainer(application: Application) {
 
+    // The fix is here: The constructor now takes no arguments.
     val repository by lazy { TileTalkRepository() }
 
-    // Make sessionManager public so it can be accessed by the factory
     val sessionManager by lazy { SessionManager(application) }
 
     // Use cases that can be shared
