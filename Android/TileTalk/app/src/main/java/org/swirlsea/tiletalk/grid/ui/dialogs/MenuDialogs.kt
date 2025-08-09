@@ -1,4 +1,4 @@
-package org.swirlsea.tiletalk.grid.ui
+package org.swirlsea.tiletalk.grid.ui.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,8 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import org.swirlsea.tiletalk.ui.DialogState
 import org.swirlsea.tiletalk.data.User
+import org.swirlsea.tiletalk.grid.DialogState
 import java.security.KeyPair
 
 @Composable

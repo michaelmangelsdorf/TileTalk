@@ -1,5 +1,4 @@
-
-package org.swirlsea.tiletalk.grid.ui
+package org.swirlsea.tiletalk.grid.ui.partials
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -14,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay

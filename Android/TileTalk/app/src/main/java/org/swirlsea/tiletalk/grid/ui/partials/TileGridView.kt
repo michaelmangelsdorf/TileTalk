@@ -1,4 +1,4 @@
-package org.swirlsea.tiletalk.grid.ui
+package org.swirlsea.tiletalk.grid.ui.partials
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.aspectRatio
@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.swirlsea.tiletalk.ui.GridUiState
-import org.swirlsea.tiletalk.ui.TileUiState
+import org.swirlsea.tiletalk.grid.GridUiState
+import org.swirlsea.tiletalk.grid.TileUiState
 
 @Composable
 fun TileGridView(

@@ -42,8 +42,8 @@ object CryptoUtils {
     private const val AES_ALGORITHM = "AES/GCM/NoPadding"
     private const val KEY_ALIAS_PREFIX = "tile_talk_key_alias_"
     private const val AES_KEY_SIZE = 256
-    private const val GCM_IV_LENGTH = 12 // 12 bytes for GCM IV
-    private const val GCM_TAG_LENGTH = 128 // in bits
+    private const val GCM_IV_LENGTH = 12 // bytes
+    private const val GCM_TAG_LENGTH = 128 // bits
     private const val KEY_PREFS_FILENAME = "secure_rsa_key_prefs"
 
     private fun getAliasForUser(username: String) = "$KEY_ALIAS_PREFIX$username"

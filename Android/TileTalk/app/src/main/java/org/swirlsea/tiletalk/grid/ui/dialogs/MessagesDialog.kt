@@ -1,5 +1,4 @@
-
-package org.swirlsea.tiletalk.grid.ui
+package org.swirlsea.tiletalk.grid.ui.dialogs
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.swirlsea.tiletalk.DateUtils
-import org.swirlsea.tiletalk.ui.DialogState
+import org.swirlsea.tiletalk.grid.DialogState
 
 
 @Composable

@@ -1,5 +1,4 @@
-
-package org.swirlsea.tiletalk.ui
+package org.swirlsea.tiletalk.grid
 
 import org.swirlsea.tiletalk.data.ContactList
 import org.swirlsea.tiletalk.data.User
@@ -32,7 +31,7 @@ data class GridUiState(
     val tiles: List<List<TileUiState>> = List(4) { List(4) { TileUiState() } }
 )
 
-sealed interface DialogState {
+sealed interface DialogState { // Encapsulates all dialogs used
     object Hidden : DialogState
 
     data class ShowingMessages(

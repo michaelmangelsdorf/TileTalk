@@ -29,11 +29,11 @@ object DateUtils {
                 SimpleDateFormat("HH:mm", Locale.getDefault()).format(date)
             }
             messageYear == currentYear -> {
-                // Same year: "MMM d, HH:mm"
+                // Same year:
                 SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(date)
             }
             else -> {
-                // Different year: "MMM d, yyyy"
+                // Different year:
                 SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(date)
             }
         }

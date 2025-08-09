@@ -1,3 +1,4 @@
+
 package org.swirlsea.tiletalk
 
 import android.app.Application
@@ -17,12 +18,12 @@ import org.swirlsea.tiletalk.data.MessageSet
 import org.swirlsea.tiletalk.data.Tile
 import org.swirlsea.tiletalk.data.TileTalkRepository
 import org.swirlsea.tiletalk.data.User
-import org.swirlsea.tiletalk.ui.DecryptedMessage
-import org.swirlsea.tiletalk.ui.DialogState
-import org.swirlsea.tiletalk.ui.GridUiState
-import org.swirlsea.tiletalk.ui.MainScreenEvent
-import org.swirlsea.tiletalk.ui.MainUiState
-import org.swirlsea.tiletalk.ui.TileUiState
+import org.swirlsea.tiletalk.grid.DecryptedMessage
+import org.swirlsea.tiletalk.grid.DialogState
+import org.swirlsea.tiletalk.grid.GridUiState
+import org.swirlsea.tiletalk.grid.MainScreenEvent
+import org.swirlsea.tiletalk.grid.MainUiState
+import org.swirlsea.tiletalk.grid.TileUiState
 import retrofit2.HttpException
 
 class MainViewModel(

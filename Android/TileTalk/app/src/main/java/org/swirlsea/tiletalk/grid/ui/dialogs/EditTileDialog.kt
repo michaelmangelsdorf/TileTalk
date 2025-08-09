@@ -1,5 +1,5 @@
 // tiletalk/grid/ui/EditTileDialog.kt
-package org.swirlsea.tiletalk.grid.ui
+package org.swirlsea.tiletalk.grid.ui.dialogs
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,9 +17,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import org.swirlsea.tiletalk.ui.DialogState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import org.swirlsea.tiletalk.grid.DialogState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

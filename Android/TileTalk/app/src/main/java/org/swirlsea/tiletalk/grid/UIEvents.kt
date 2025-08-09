@@ -1,5 +1,4 @@
-
-package org.swirlsea.tiletalk.ui
+package org.swirlsea.tiletalk.grid
 
 import org.swirlsea.tiletalk.data.User
 import java.security.KeyPair

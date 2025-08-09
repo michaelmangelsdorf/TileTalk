@@ -1,4 +1,4 @@
-package org.swirlsea.tiletalk.grid.ui
+package org.swirlsea.tiletalk.grid.ui.partials
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

@@ -36,10 +36,20 @@ import org.swirlsea.tiletalk.auth.ui.AuthDialog
 import org.swirlsea.tiletalk.contacts.ui.ContactsDialog
 import org.swirlsea.tiletalk.contacts.ui.ContactsViewModel
 import org.swirlsea.tiletalk.data.User
-import org.swirlsea.tiletalk.ui.DialogState
-import org.swirlsea.tiletalk.ui.GridUiState
-import org.swirlsea.tiletalk.ui.MainScreenEvent
-import org.swirlsea.tiletalk.ui.MainUiState
+import org.swirlsea.tiletalk.grid.DialogState
+import org.swirlsea.tiletalk.grid.GridUiState
+import org.swirlsea.tiletalk.grid.MainScreenEvent
+import org.swirlsea.tiletalk.grid.MainUiState
+import org.swirlsea.tiletalk.grid.ui.dialogs.AboutDialog
+import org.swirlsea.tiletalk.grid.ui.dialogs.AdvancedSettingsDialog
+import org.swirlsea.tiletalk.grid.ui.dialogs.ConfirmKeyGenerationDialog
+import org.swirlsea.tiletalk.grid.ui.dialogs.ConfirmRekeyDialog
+import org.swirlsea.tiletalk.grid.ui.dialogs.EditTileDialog
+import org.swirlsea.tiletalk.grid.ui.dialogs.HelpDialog
+import org.swirlsea.tiletalk.grid.ui.dialogs.MessagesDialog
+import org.swirlsea.tiletalk.grid.ui.dialogs.PrivacyDialog
+import org.swirlsea.tiletalk.grid.ui.partials.ControlRow
+import org.swirlsea.tiletalk.grid.ui.partials.TileGridView
 
 class MainViewModelFactory(private val application: Application) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -410,12 +420,37 @@ fun MainScreen(
                     MessagesDialog(
                         dialogState = dialog,
                         onDismiss = { mainViewModel.onEvent(MainScreenEvent.DismissDialog) },
-                        onDeleteMessage = { ownerId, x, y -> mainViewModel.onEvent(MainScreenEvent.DeleteMessage(ownerId, x, y)) },
-                        onAddComment = { message ->
-                            mainViewModel.onEvent(MainScreenEvent.AddComment(dialog.tileOwnerId, dialog.x, dialog.y, message))
+                        onDeleteMessage = { ownerId, x, y ->
+                            mainViewModel.onEvent(
+                                MainScreenEvent.DeleteMessage(
+                                    ownerId,
+                                    x,
+                                    y
+                                )
+                            )
                         },
-                        onSaveEditedMessage = { message -> mainViewModel.onEvent(MainScreenEvent.SaveEditedMessage(message)) },
-                        onStartEditing = { messageId, currentText -> mainViewModel.onEvent(MainScreenEvent.StartEditingMessage(messageId, currentText)) },
+                        onAddComment = { message ->
+                            mainViewModel.onEvent(
+                                MainScreenEvent.AddComment(
+                                    dialog.tileOwnerId,
+                                    dialog.x,
+                                    dialog.y,
+                                    message
+                                )
+                            )
+                        },
+                        onSaveEditedMessage = { message ->
+                            mainViewModel.onEvent(
+                                MainScreenEvent.SaveEditedMessage(
+                                    message
+                                )
+                            )
+                        },
+                        onStartEditing = { messageId, currentText ->
+                            mainViewModel.onEvent(
+                                MainScreenEvent.StartEditingMessage(messageId, currentText)
+                            )
+                        },
                         onCancelEditing = { mainViewModel.onEvent(MainScreenEvent.CancelEditingMessage) }
                     )
                 }
@@ -423,7 +458,13 @@ fun MainScreen(
                     ConfirmKeyGenerationDialog(
                         dialogState = dialog,
                         onDismiss = { mainViewModel.onEvent(MainScreenEvent.DismissDialog) },
-                        onConfirm = { mainViewModel.onEvent(MainScreenEvent.ConfirmGenerateNewKeyPair(dialog.user)) }
+                        onConfirm = {
+                            mainViewModel.onEvent(
+                                MainScreenEvent.ConfirmGenerateNewKeyPair(
+                                    dialog.user
+                                )
+                            )
+                        }
                     )
                 }
                 is DialogState.ConfirmRekey -> {
@@ -451,7 +492,12 @@ private fun UserGridSection(uiState: MainUiState, mainViewModel: MainViewModel) 
                 .padding(vertical = 8.dp),
             textAlign = TextAlign.Start
         )
-        val userGridState = uiState.userGrid ?: GridUiState(owner = User(id = -1, username = "Offline"))
+        val userGridState = uiState.userGrid ?: GridUiState(
+            owner = User(
+                id = -1,
+                username = "Offline"
+            )
+        )
         TileGridView(
             gridState = userGridState,
             onTileTap = { x, y ->
@@ -486,19 +532,36 @@ private fun ContactGridSection(uiState: MainUiState, mainViewModel: MainViewMode
                 }
             }
         )
-        val contactGridState = uiState.contactGrid ?: GridUiState(owner = User(id = -1, username = "No Contact Selected"))
+        val contactGridState = uiState.contactGrid ?: GridUiState(
+            owner = User(
+                id = -1,
+                username = "No Contact Selected"
+            )
+        )
         TileGridView(
             gridState = contactGridState,
             onTileTap = if (selectedContact != null) {
                 { x, y ->
-                    mainViewModel.onEvent(MainScreenEvent.TileTapped(contactGridState.owner.id, x, y))
+                    mainViewModel.onEvent(
+                        MainScreenEvent.TileTapped(
+                            contactGridState.owner.id,
+                            x,
+                            y
+                        )
+                    )
                 }
             } else {
                 { _, _ -> }
             },
             onTileLongPress = if (selectedContact != null) {
                 { x, y ->
-                    mainViewModel.onEvent(MainScreenEvent.TileLongPressed(contactGridState.owner.id, x, y))
+                    mainViewModel.onEvent(
+                        MainScreenEvent.TileLongPressed(
+                            contactGridState.owner.id,
+                            x,
+                            y
+                        )
+                    )
                 }
             } else {
                 { _, _ -> }
