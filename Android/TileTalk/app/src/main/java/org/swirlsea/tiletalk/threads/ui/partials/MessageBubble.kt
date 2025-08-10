@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.swirlsea.tiletalk.grid.DecryptedMessage
+import org.swirlsea.tiletalk.parseMessageForLink
 import java.util.regex.Pattern
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -146,22 +147,5 @@ fun MessageBubble(
                 }
             }
         }
-    }
-}
-
-private fun parseMessageForLink(message: String): Pair<String?, String> {
-    val urlPattern = Pattern.compile(
-        "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
-                + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
-                + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*^@!:/{};']*)",
-        Pattern.CASE_INSENSITIVE or Pattern.MULTILINE or Pattern.DOTALL
-    )
-    val matcher = urlPattern.matcher(message)
-    return if (matcher.find()) {
-        val url = matcher.group(0)?.trim()
-        val text = message.replace(url!!, "").trim()
-        Pair(url, text)
-    } else {
-        Pair(null, message)
     }
 }

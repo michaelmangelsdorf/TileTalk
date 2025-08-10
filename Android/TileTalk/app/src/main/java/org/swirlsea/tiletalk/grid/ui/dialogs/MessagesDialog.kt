@@ -2,6 +2,7 @@ package org.swirlsea.tiletalk.grid.ui.dialogs
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import org.swirlsea.tiletalk.DateUtils
 import org.swirlsea.tiletalk.grid.DialogState
+import org.swirlsea.tiletalk.parseMessageForLink
 
 
 @Composable
@@ -195,6 +198,11 @@ private fun MessageCard(
     onSaveClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
+    val (link, text) = remember(content) {
+        parseMessageForLink(content)
+    }
+    val uriHandler = LocalUriHandler.current
+
     Column (modifier= Modifier.padding(12.dp)){
         Row(
             modifier = Modifier
@@ -260,7 +268,22 @@ private fun MessageCard(
                         }
                     }
                 } else {
-                    Text(content, fontSize = 20.sp, lineHeight = 28.sp)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = text,
+                            fontSize = 20.sp,
+                            lineHeight = 28.sp,
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                        link?.let { url ->
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "🔗",
+                                fontSize = 20.sp,
+                                modifier = Modifier.clickable { uriHandler.openUri(url) }
+                            )
+                        }
+                    }
                 }
             }
         }

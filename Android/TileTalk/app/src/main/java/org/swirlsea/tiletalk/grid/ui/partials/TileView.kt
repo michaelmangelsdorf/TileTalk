@@ -1,15 +1,20 @@
 package org.swirlsea.tiletalk.grid.ui.partials
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MailOutline
@@ -21,13 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.swirlsea.tiletalk.grid.TileUiState
 import org.swirlsea.tiletalk.grid.ui.animatedSymbolMotion
+import org.swirlsea.tiletalk.parseMessageForLink
 import org.swirlsea.tiletalk.ui.theme.dark_symbolCardBackground
 import org.swirlsea.tiletalk.ui.theme.dark_symbolCardSelectedBackground
 import org.swirlsea.tiletalk.ui.theme.dark_symbolCardSelectedBorder
@@ -36,6 +43,7 @@ import org.swirlsea.tiletalk.ui.theme.light_symbolCardSelectedBackground
 import org.swirlsea.tiletalk.ui.theme.light_symbolCardSelectedBorder
 import kotlin.random.Random
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TileView(
     tileState: TileUiState,
@@ -56,6 +64,13 @@ fun TileView(
 
     val animation = animatedSymbolMotion(tileState.animationType)
 
+    val (link, parsedText) = remember(tileState.symbol) {
+        parseMessageForLink(tileState.symbol ?: "")
+    }
+    val uriHandler = LocalUriHandler.current
+
+    val symbolFontSize = 48.sp
+
     LaunchedEffect(tileState.callout) {
         if (!tileState.callout.isNullOrBlank()) {
             while (true) {
@@ -74,43 +89,43 @@ fun TileView(
                 .clip(RoundedCornerShape(20.dp))
                 .background(backgroundColor)
                 .then(
-                    if (highlightBorder != null) Modifier.border(highlightBorder, RoundedCornerShape(20.dp))
+                    if (highlightBorder != null) Modifier.border(
+                        highlightBorder,
+                        RoundedCornerShape(20.dp)
+                    )
                     else Modifier
                 )
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onTap = { _ -> onTap() },
-                        onLongPress = { _ -> onLongPress() }
-                    )
-                },
+                .combinedClickable(
+                    onClick = {
+                        onTap()
+                    },
+                    onLongClick = { onLongPress() }
+                ),
             contentAlignment = Alignment.Center
         ) {
 
             if (tileState.symbol?.isNotBlank() == true) {
-                Text(
-                    text = tileState.symbol,
-                    fontSize = 48.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.graphicsLayer(
-                        translationX = animation.offsetX,
-                        translationY = animation.offsetY,
-                        rotationZ = animation.rotationZ,
-                        rotationY = if (tileState.flip) 180f else 0f
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text(
+                        text = parsedText,
+                        fontSize = symbolFontSize,
+                        textAlign = TextAlign.Center,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .weight(1f, fill = false)
+                            .graphicsLayer(
+                                translationX = animation.offsetX,
+                                translationY = animation.offsetY,
+                                rotationZ = animation.rotationZ,
+                                rotationY = if (tileState.flip) 180f else 0f
+                            )
                     )
-                )
+                }
             }
-
-//            if (tileState.title?.isNotBlank() == true) {
-//                Text(
-//                    text = tileState.title,
-//                    fontSize = 12.sp,
-//                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-//                    textAlign = TextAlign.Center,
-//                    modifier = Modifier
-//                        .align(Alignment.TopCenter)
-//                        .padding(top = 8.dp)
-//                )
-//            }
 
             if (tileState.hasNewMessages) {
                 Icon(
