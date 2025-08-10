@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.swirlsea.tiletalk.AuthUiState
+import org.swirlsea.tiletalk.AuthViewModel
 import org.swirlsea.tiletalk.CryptoUtils
 import org.swirlsea.tiletalk.data.MessageSet
 import org.swirlsea.tiletalk.data.TileTalkRepository
@@ -14,7 +16,8 @@ import org.swirlsea.tiletalk.threads.ThreadsUiState
 
 class ThreadsViewModel(
     private val application: Application,
-    private val repository: TileTalkRepository
+    private val repository: TileTalkRepository,
+    private val authViewModel: AuthViewModel
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ThreadsUiState>(ThreadsUiState.Loading)
@@ -24,12 +27,23 @@ class ThreadsViewModel(
 
     init {
         viewModelScope.launch {
-            val userResponse = repository.validateCurrentSession()
-            if (userResponse.success && userResponse.data != null) {
-                currentUser = userResponse.data
-                loadThreads()
-            } else {
-                _uiState.value = ThreadsUiState.Error("Could not identify current user.")
+            authViewModel.uiState.collect { authState ->
+                when (authState) {
+                    is AuthUiState.LoginSuccess -> {
+                        currentUser = authState.user
+                        loadThreads()
+                    }
+                    is AuthUiState.Error -> {
+                        _uiState.value = ThreadsUiState.Error(authState.message)
+                    }
+                    is AuthUiState.Idle -> {
+                        // You might want to clear the threads here or show a "logged out" message
+                        _uiState.value = ThreadsUiState.Error("Please log in to view threads.")
+                    }
+                    else -> {
+                        // Loading state is handled by the initial _uiState value
+                    }
+                }
             }
         }
     }
