@@ -67,7 +67,7 @@ fun ThreadsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("All Threads") },
+                title = { Text("Thread View") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")

@@ -212,7 +212,7 @@ fun MainScreen(
                             enabled = uiState.loggedInUser != null
                         ) {
                             Text(
-                                "All Threads",
+                                "Thread View",
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.fillMaxWidth(),
                                 textAlign = TextAlign.Start
