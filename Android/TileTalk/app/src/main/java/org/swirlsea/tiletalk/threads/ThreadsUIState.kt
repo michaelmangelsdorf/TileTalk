@@ -11,7 +11,6 @@ sealed interface ThreadsUiState {
         val editingMessageId: Int? = null,
         val editingMessageText: String = "",
         val addingCommentToTileId: Int? = null,
-        // Add this to track which list item to scroll to
         val scrollToThreadIndex: Int? = null
     ) : ThreadsUiState
     data class Error(val message: String) : ThreadsUiState

@@ -32,9 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.swirlsea.tiletalk.threads.ThreadsUiState
+import org.swirlsea.tiletalk.threads.ThreadsViewModel
+import org.swirlsea.tiletalk.threads.ThreadsViewModelFactory
 import org.swirlsea.tiletalk.threads.ui.partials.ThreadItem
-// Keep the alias here for safety and clarity.
-import org.swirlsea.tiletalk.data.Thread as AppThread
+
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable

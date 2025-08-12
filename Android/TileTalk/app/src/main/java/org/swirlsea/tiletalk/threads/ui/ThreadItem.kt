@@ -25,7 +25,6 @@ import org.swirlsea.tiletalk.data.Thread as AppThread
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ThreadItem(
-    // Use the alias 'AppThread' here to avoid ambiguity.
     thread: AppThread,
     currentUser: User?,
     editingMessageId: Int?,

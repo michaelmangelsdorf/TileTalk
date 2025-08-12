@@ -1,4 +1,4 @@
-package org.swirlsea.tiletalk.threads.ui
+package org.swirlsea.tiletalk.threads
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -12,7 +12,6 @@ import org.swirlsea.tiletalk.CryptoUtils
 import org.swirlsea.tiletalk.data.MessageSet
 import org.swirlsea.tiletalk.data.TileTalkRepository
 import org.swirlsea.tiletalk.data.User
-import org.swirlsea.tiletalk.threads.ThreadsUiState
 
 class ThreadsViewModel(
     private val application: Application,
@@ -37,7 +36,6 @@ class ThreadsViewModel(
                         _uiState.value = ThreadsUiState.Error(authState.message)
                     }
                     is AuthUiState.Idle -> {
-                        // You might want to clear the threads here or show a "logged out" message
                         _uiState.value = ThreadsUiState.Error("Please log in to view threads.")
                     }
                     else -> {
@@ -75,7 +73,7 @@ class ThreadsViewModel(
             _uiState.value = it.copy(
                 editingMessageId = messageId,
                 editingMessageText = currentText,
-                scrollToThreadIndex = threadIndex // Set the index to scroll to
+                scrollToThreadIndex = threadIndex
             )
         }
     }
@@ -85,7 +83,7 @@ class ThreadsViewModel(
         (_uiState.value as? ThreadsUiState.Success)?.let {
             _uiState.value = it.copy(
                 addingCommentToTileId = tileId,
-                scrollToThreadIndex = threadIndex // Set the index to scroll to
+                scrollToThreadIndex = threadIndex
             )
         }
     }

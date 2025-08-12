@@ -261,7 +261,7 @@ object CryptoUtils {
                     }
                 }
             } catch (e: Exception) {
-                // Handle error
+
             }
         }
     }

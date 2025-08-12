@@ -1,4 +1,4 @@
-package org.swirlsea.tiletalk.threads.ui
+package org.swirlsea.tiletalk.threads
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,8 @@ class ThreadsViewModelFactory(private val application: Application) : ViewModelP
             val repository = app.container.repository
             val sessionManager = app.container.sessionManager
             val loginRegisterUseCase = app.container.loginRegisterUseCase
-            val authViewModel = AuthViewModel(application, loginRegisterUseCase, repository, sessionManager)
+            val authViewModel =
+                AuthViewModel(application, loginRegisterUseCase, repository, sessionManager)
 
             @Suppress("UNCHECKED_CAST")
             return ThreadsViewModel(application, repository, authViewModel) as T

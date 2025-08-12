@@ -18,7 +18,6 @@ class TileTalkApp : Application() {
 
 class AppContainer(application: Application) {
 
-    // The fix is here: The constructor now takes no arguments.
     val repository by lazy { TileTalkRepository() }
 
     val sessionManager by lazy { SessionManager(application) }
